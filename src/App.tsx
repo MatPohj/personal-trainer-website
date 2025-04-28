@@ -63,7 +63,7 @@ function App() {
     {
       field: 'date',
       headerName: 'Date',
-      width: 130,
+      width: 160,
       valueFormatter: (value) => {
         if (!value) return '-';
         try {
@@ -79,7 +79,7 @@ function App() {
       // Keep field as 'time' for identification, but use valueGetter based on the row's 'date'
       field: 'time', 
       headerName: 'Time',
-      width: 90,
+      width: 140,
       // Use params.row.date to access the correct data field
       valueGetter: (value, row) => { 
         if (!row || !row.date) return '-'; // Check if row and row.date exist
@@ -138,7 +138,7 @@ function App() {
         Training Sessions
       </Typography>
       
-      <Box sx={{ height: 400, width: '100%' }}>
+      <Box sx={{ width: '100%' }}> 
         <DataGrid
           rows={rows}
           columns={columns}
@@ -149,7 +149,7 @@ function App() {
           }}
           pageSizeOptions={[5, 10, 25]}
           disableRowSelectionOnClick
-          autoHeight
+          autoHeight // Keep autoHeight on the DataGrid
         />
       </Box>
     </Container>
