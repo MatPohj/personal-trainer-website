@@ -67,23 +67,26 @@ function App() {
       valueFormatter: (value) => {
         if (!value) return '-';
         try {
+          // The value here is the full date string from the 'date' field
           const date = parseISO(String(value));
-          return format(date, 'MMM d, yyyy');
+          return format(date, 'dd.MM.yyyy');
         } catch {
           return 'Invalid date';
         }
       },
     },
     {
-      field: 'time',
+      // Keep field as 'time' for identification, but use valueGetter based on the row's 'date'
+      field: 'time', 
       headerName: 'Time',
       width: 90,
-      // Here value is the raw date string
-      valueGetter: (value) => {
-        if (!value) return '-';
+      // Use params.row.date to access the correct data field
+      valueGetter: (value, row) => { 
+        if (!row || !row.date) return '-'; // Check if row and row.date exist
         try {
-          const date = parseISO(String(value));
-          return format(date, 'HH:mm');
+          // Parse the full date string from the row's 'date' field
+          const date = parseISO(String(row.date)); 
+          return format(date, 'HH:mm'); // Format only the time part
         } catch {
           return 'Invalid time';
         }
@@ -98,10 +101,8 @@ function App() {
     }
   ];
 
-  // Prepare rows with reliable unique IDs extracted from links
   const rows = trainings.map((training) => {
     try {
-      // Extract numeric ID from the URL in self.href
       const urlParts = training._links.self.href.split('/');
       const id = urlParts[urlParts.length - 1]; 
       
