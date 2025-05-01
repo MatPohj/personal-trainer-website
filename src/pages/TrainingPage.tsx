@@ -1,39 +1,63 @@
-// filepath: c:\Users\arimo\Gitkansio\PersonalTrainerWebsite\src\pages\TrainingPage.tsx
 import { useState, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
 import { format, parseISO } from 'date-fns';
-import { Training, TrainingResponse } from '../types'; 
+import { EnrichedTraining, TrainingResponse, extractIdFromUrl } from '../types'; 
 import LoadingIndicator from '../components/LoadingIndicator'; 
 import ErrorMessage from '../components/ErrorMessage'; 
 import TrainingGrid from '../components/TrainingGrid'; 
 
 function TrainingPage() {
-  const [trainings, setTrainings] = useState<Training[]>([]);
+  const [trainings, setTrainings] = useState<EnrichedTraining[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    fetch('/api/trainings')
-      .then(response => {
+    const fetchTrainings = async () => {
+      try {
+        const response = await fetch('/api/trainings');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
-      })
-      .then((data: TrainingResponse) => {
+        
+        const data: TrainingResponse = await response.json();
+        
         if (data && data._embedded && Array.isArray(data._embedded.trainings)) {
-          setTrainings(data._embedded.trainings);
+          const trainingsWithCustomers = await Promise.all(
+            data._embedded.trainings.map(async (training) => {
+              try {
+                const customerResponse = await fetch(training._links.customer.href);
+                if (!customerResponse.ok) {
+                  throw new Error('Failed to fetch customer');
+                }
+                const customer = await customerResponse.json();
+                return {
+                  ...training,
+                  customerName: `${customer.firstname} ${customer.lastname}`
+                };
+              } catch (err) {
+                console.error('Error fetching customer:', err);
+                return {
+                  ...training,
+                  customerName: 'Unknown'
+                };
+              }
+            })
+          );
+          
+          setTrainings(trainingsWithCustomers);
         } else {
           throw new Error('Invalid data structure received');
         }
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         setError('Error fetching training data');
-        setLoading(false);
         console.error('Error fetching API:', err);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchTrainings();
   }, []);
 
   const columns: GridColDef[] = [
@@ -71,26 +95,18 @@ function TrainingPage() {
       headerName: 'Duration (min)', 
       type: 'number', 
       width: 130
+    },
+    {
+      field: 'customerName',
+      headerName: 'Customer',
+      width: 180
     }
   ];
 
-  const rows = trainings.map((training) => {
-    try {
-      const urlParts = training._links.self.href.split('/');
-      const id = urlParts[urlParts.length - 1]; 
-      
-      return {
-        id,
-        ...training
-      };
-    } catch (err) {
-      console.error('Error extracting ID:', err);
-      return {
-        id: crypto.randomUUID(), 
-        ...training
-      };
-    }
-  });
+  const rows = trainings.map((training) => ({
+    id: extractIdFromUrl(training._links.self.href),
+    ...training
+  }));
 
   if (loading) {
     return <LoadingIndicator />; 

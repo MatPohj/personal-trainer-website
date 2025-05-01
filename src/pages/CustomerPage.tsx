@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid';
-import { Customer, CustomerResponse } from '../types'; 
+import { Customer, CustomerResponse, extractIdFromUrl } from '../types'; 
 import LoadingIndicator from '../components/LoadingIndicator'; 
 import ErrorMessage from '../components/ErrorMessage'; 
 import CustomerGrid from '../components/CustomerGrid'; 
@@ -13,26 +12,29 @@ function CustomerPage() {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    fetch('/api/customers') 
-      .then(response => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await fetch('/api/customers');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
-      })
-      .then((data: CustomerResponse) => {
+        
+        const data: CustomerResponse = await response.json();
+        
         if (data && data._embedded && Array.isArray(data._embedded.customers)) {
           setCustomers(data._embedded.customers);
         } else {
           throw new Error('Invalid data structure received');
         }
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err) {
         setError('Error fetching customer data');
-        setLoading(false);
         console.error('Error fetching API:', err);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchCustomers();
   }, []);
 
   const columns: GridColDef[] = [
@@ -45,24 +47,10 @@ function CustomerPage() {
     { field: 'phone', headerName: 'Phone', width: 150 },
   ];
 
-  const rows = customers.map((customer) => {
-    try {
-      const urlParts = customer._links.self.href.split('/');
-      const id = urlParts[urlParts.length - 1]; 
-      
-      return {
-        id,
-        ...customer
-      };
-    } catch (err) {
-      console.error('Error extracting ID:', err);
-
-      return {
-        id: crypto.randomUUID(), 
-        ...customer
-      };
-    }
-  });
+  const rows = customers.map((customer) => ({
+    id: extractIdFromUrl(customer._links.self.href),
+    ...customer
+  }));
 
   if (loading) {
     return <LoadingIndicator />; 
