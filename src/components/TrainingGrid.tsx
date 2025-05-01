@@ -18,7 +18,6 @@ const TrainingGrid = ({ rows, columns }: TrainingGridProps) => (
       }}
       pageSizeOptions={[5, 10, 25]}
       disableRowSelectionOnClick
-      autoHeight 
     />
   </Box>
 );

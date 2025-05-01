@@ -19,7 +19,11 @@ const CustomerGrid = ({ rows, columns }: CustomerGridProps) => (
       }}
       pageSizeOptions={[5, 10, 25]}
       disableRowSelectionOnClick
-      autoHeight 
+      sx={{ 
+        '& .MuiDataGrid-row:hover': {
+          backgroundColor: 'lightgray',
+        }
+      }}
     />
   </Box>
 );
