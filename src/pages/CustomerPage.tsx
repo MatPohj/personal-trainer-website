@@ -13,6 +13,7 @@ import CustomerGrid from "../components/CustomerGrid";
 import AddCustomerDialog from "../components/AddCustomerDialog";
 import EditCustomerDialog from "../components/EditCustomerDialog";
 import AddTrainingDialog from "../components/AddTrainingDialog";
+import Papa from "papaparse"
 
 function CustomerPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -70,6 +71,27 @@ function CustomerPage() {
     } catch (err) {
       alert("Error deleting customer");
     }
+  };
+
+  const exportToCSV = () => {
+    const filtered = customers.map(({ firstname, lastname, email, phone, streetaddress, postcode, city }) => ({
+      firstname,
+      lastname,
+      email,
+      phone,
+      streetaddress,
+      postcode,
+      city
+    }));
+    const csv = Papa.unparse(filtered);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'customers.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const columns: GridColDef[] = [
@@ -130,6 +152,9 @@ function CustomerPage() {
         onClick={() => setAddDialogOpen(true)}
       >
         Add Customer
+      </Button>
+      <Button variant="contained" onClick={exportToCSV} sx={{ mb: 2 }}>
+        Export CSV
       </Button>
       <CustomerGrid rows={rows} columns={columns} /> 
       <AddCustomerDialog
