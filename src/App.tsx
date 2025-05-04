@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/materi
 import './App.css';
 import TrainingPage from './pages/TrainingPage'; 
 import CustomerPage from './pages/CustomerPage'; 
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
             <Button 
               color="inherit" 
               component={Link} 
-              to="//"
+              to="/"
               sx={{ 
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)', 
@@ -38,6 +39,18 @@ function App() {
             >
               Customers
             </Button>
+            <Button 
+              color="inherit" 
+              component={Link} 
+              to="/calendar"
+              sx={{ 
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)', 
+                }
+              }}
+            >
+              Calendar
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>
@@ -45,6 +58,7 @@ function App() {
         <Routes>
           <Route path="/" element={<TrainingPage />} />
           <Route path="/customers" element={<CustomerPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
         </Routes>
       </Container>
     </>

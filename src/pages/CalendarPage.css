@@ -1,0 +1,38 @@
+.calendar-root {
+    min-height: 100vh;
+    background: #242424;
+    display: block;
+}
+
+.calendar-box {
+    width: 100%;
+    max-width: 1400px;
+    min-height: 600px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    overflow-x: auto;
+    overflow-y: visible;
+    margin: 0 auto; 
+}
+
+
+.rbc-event, .rbc-event-label, .rbc-event-content {
+  color: #000000 !important;  /*Object text in calendar*/
+  font-weight: bold;
+  font-size: 1em;
+}
+
+
+.rbc-time-content .rbc-timeslot-group,
+.rbc-time-header-content,
+.rbc-time-gutter,
+.rbc-time-gutter .rbc-timeslot-group,
+.rbc-time-gutter .rbc-label {
+  color: #d21919 !important; /* Time + date color*/
+  font-weight: bold;
+}
+
+.rbc-calendar {
+  background: #fff !important;
+}
