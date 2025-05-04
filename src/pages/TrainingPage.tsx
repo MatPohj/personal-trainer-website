@@ -101,7 +101,7 @@ function TrainingPage() {
       field: "time", 
       headerName: "Time",
       width: 140,
-      valueGetter: (value, row) => { 
+      valueGetter: (_, row) => { 
         if (!row || !row.date) return "-"; 
         try {
           const date = parseISO(String(row.date)); 
