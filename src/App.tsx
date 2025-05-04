@@ -17,7 +17,7 @@ function App() {
             <Button 
               color="inherit" 
               component={Link} 
-              to="/"
+              to="//"
               sx={{ 
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.2)', 
