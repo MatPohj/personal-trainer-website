@@ -100,6 +100,16 @@ export default function CalendarPage() {
             date={date}
             onNavigate={setDate}
             popup
+            formats={{
+              timeGutterFormat: "HH:mm",
+              eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+                localizer
+                  ? localizer.format(start, "HH:mm", culture) +
+                    " – " +
+                    localizer.format(end, "HH:mm", culture)
+                  : "",
+              agendaTimeFormat: "HH:mm",
+            }}
           />
         </Box>
       </Container>
