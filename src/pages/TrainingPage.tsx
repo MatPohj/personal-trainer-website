@@ -22,7 +22,7 @@ function TrainingPage() {
   const handleConfirmDelete = async () => {
     if (!deleteTrainingId) return;
     try {
-      const response = await fetch(`/api/trainings/${deleteTrainingId}`, {
+      const response = await fetch(`https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings/${deleteTrainingId}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete training");

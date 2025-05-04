@@ -61,7 +61,7 @@ function CustomerPage() {
     if (!deleteCustomer) return;
     const id = extractIdFromUrl(deleteCustomer._links.self.href);
     try {
-      const response = await fetch(`/api/customers/${id}`, {
+      const response = await fetch(`https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete customer");
