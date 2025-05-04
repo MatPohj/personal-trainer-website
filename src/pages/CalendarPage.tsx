@@ -7,7 +7,7 @@ import { fi } from "date-fns/locale";
 import LoadingIndicator from "../components/LoadingIndicator";
 import ErrorMessage from "../components/ErrorMessage";
 import "./CalendarPage.css";
-
+import { CalendarEvent } from "../types";
 const locales = {
   fi: fi,
 };
@@ -20,12 +20,6 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-}
 
 export default function CalendarPage() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);

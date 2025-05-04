@@ -50,3 +50,9 @@ export function extractIdFromUrl(url: string): string {
     return crypto.randomUUID();
   }
 }
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+}
