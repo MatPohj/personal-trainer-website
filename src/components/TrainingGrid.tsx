@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { Box } from "@mui/material";
+import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 
 interface TrainingGridProps {
   rows: GridRowsProp;
@@ -7,7 +7,7 @@ interface TrainingGridProps {
 }
 
 const TrainingGrid = ({ rows, columns }: TrainingGridProps) => (
-  <Box sx={{ width: '100%' }}> 
+  <Box sx={{ width: "100%" }}> 
     <DataGrid
       rows={rows}
       columns={columns}

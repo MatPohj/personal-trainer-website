@@ -1,50 +1,52 @@
-import { useState, useEffect } from 'react';
-import { Container, Typography } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
-import { Customer, CustomerResponse, extractIdFromUrl } from '../types'; 
-import LoadingIndicator from '../components/LoadingIndicator'; 
-import ErrorMessage from '../components/ErrorMessage'; 
-import CustomerGrid from '../components/CustomerGrid'; 
+import { useState, useEffect } from "react";
+import { Container, Typography, Button } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { Customer, CustomerResponse, extractIdFromUrl } from "../types"; 
+import LoadingIndicator from "../components/LoadingIndicator"; 
+import ErrorMessage from "../components/ErrorMessage"; 
+import CustomerGrid from "../components/CustomerGrid"; 
+import AddCustomerDialog from "../components/AddCustomerDialog";
 
 function CustomerPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  
+  const fetchCustomers = async () => {
+    try {
+      const response = await fetch("/api/customers");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      
+      const data: CustomerResponse = await response.json();
+      
+      if (data && data._embedded && Array.isArray(data._embedded.customers)) {
+        setCustomers(data._embedded.customers);
+      } else {
+        throw new Error("Invalid data structure received");
+      }
+    } catch (err) {
+      setError("Error fetching customer data");
+      console.error("Error fetching API:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const response = await fetch('/api/customers');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        
-        const data: CustomerResponse = await response.json();
-        
-        if (data && data._embedded && Array.isArray(data._embedded.customers)) {
-          setCustomers(data._embedded.customers);
-        } else {
-          throw new Error('Invalid data structure received');
-        }
-      } catch (err) {
-        setError('Error fetching customer data');
-        console.error('Error fetching API:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
     fetchCustomers();
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'firstname', headerName: 'First Name', width: 150 },
-    { field: 'lastname', headerName: 'Last Name', width: 150 },
-    { field: 'streetaddress', headerName: 'Address', width: 200 },
-    { field: 'postcode', headerName: 'Postcode', width: 120 },
-    { field: 'city', headerName: 'City', width: 150 },
-    { field: 'email', headerName: 'Email', width: 200 },
-    { field: 'phone', headerName: 'Phone', width: 150 },
+    { field: "firstname", headerName: "First Name", width: 150 },
+    { field: "lastname", headerName: "Last Name", width: 150 },
+    { field: "streetaddress", headerName: "Address", width: 200 },
+    { field: "postcode", headerName: "Postcode", width: 120 },
+    { field: "city", headerName: "City", width: 150 },
+    { field: "email", headerName: "Email", width: 200 },
+    { field: "phone", headerName: "Phone", width: 150 },
   ];
 
   const rows = customers.map((customer) => ({
@@ -65,8 +67,19 @@ function CustomerPage() {
       <Typography variant="h4" component="h1" gutterBottom>
         Customers
       </Typography>
-      
+      <Button
+        variant="contained"
+        sx={{ mb: 2 }}
+        onClick={() => setAddDialogOpen(true)}
+      >
+        Add Customer
+      </Button>
       <CustomerGrid rows={rows} columns={columns} /> 
+      <AddCustomerDialog
+        open={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        onCustomerAdded={fetchCustomers}
+      />
     </Container>
   );
 }

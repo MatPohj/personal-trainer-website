@@ -1,6 +1,6 @@
 
-import { Box } from '@mui/material';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { Box } from "@mui/material";
+import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 
 interface CustomerGridProps {
   rows: GridRowsProp;
@@ -8,7 +8,7 @@ interface CustomerGridProps {
 }
 
 const CustomerGrid = ({ rows, columns }: CustomerGridProps) => (
-  <Box sx={{ width: '100%' }}> 
+  <Box sx={{ width: "100%" }}> 
     <DataGrid
       rows={rows}
       columns={columns}
@@ -20,8 +20,8 @@ const CustomerGrid = ({ rows, columns }: CustomerGridProps) => (
       pageSizeOptions={[5, 10, 25]}
       disableRowSelectionOnClick
       sx={{ 
-        '& .MuiDataGrid-row:hover': {
-          backgroundColor: 'lightgray',
+        "& .MuiDataGrid-row:hover": {
+          backgroundColor: "lightgray",
         }
       }}
     />
