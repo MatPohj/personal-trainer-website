@@ -42,7 +42,7 @@ export default function AddTrainingDialog({ open, customer, onClose, onTrainingA
         duration: Number(form.duration),
         customer: customer._links.self.href,
       };
-      const response = await fetch("/api/trainings", {
+      const response = await fetch("https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

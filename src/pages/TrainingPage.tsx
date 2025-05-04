@@ -36,7 +36,7 @@ function TrainingPage() {
 
   const fetchTrainings = async () => {
     try {
-      const response = await fetch("/api/trainings");
+      const response = await fetch("https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

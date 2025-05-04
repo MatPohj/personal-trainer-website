@@ -28,7 +28,7 @@ export default function AddCustomerDialog({ open, onClose, onCustomerAdded }: Ad
   const handleSubmit = async () => {
     setSaving(true);
     try {
-      const response = await fetch("/api/customers", {
+      const response = await fetch("https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

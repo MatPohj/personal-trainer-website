@@ -25,7 +25,7 @@ function CustomerPage() {
   
   const fetchCustomers = async () => {
     try {
-      const response = await fetch("/api/customers");
+      const response = await fetch("https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
